@@ -8,7 +8,7 @@ from .serializers import *
 from .models import *
 from rest_framework.filters import SearchFilter
 from .permissions import IsOwnerOrReadOnly
-from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 
 
 
@@ -41,7 +41,7 @@ class OrderAPIView(OrdersParentView):
     queryset = Orders.objects.all()
     serializer_class = OrderSerializer
     filter_backends = [SearchFilter]
-    search_fields = ['user']
+    search_fields = ['user__username']
     lookup_field = 'user'
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]
     def get(self, requset):
@@ -67,7 +67,6 @@ class ServicesAPIView(APIView):
     serializer_class = ServicesSerializer
     filter_backends = [SearchFilter]
     search_fields = ['title']
-    permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]
     def get(self, requset):
         service = Services.objects.all()
         serializer = ServicesSerializer(service, many=True)
