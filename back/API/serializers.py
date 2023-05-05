@@ -56,3 +56,38 @@ class ServicesSerializer(serializers.ModelSerializer):
         )
         order.save()
         return order
+    
+class SuccessOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SuccessedOrders
+        fields = '__all__'
+
+    def create(self, validated_data):
+        successOrder = SuccessedOrders.objects.create(
+            user=User.objects.filter(username=validated_data['user']).first(),
+            order=validated_data['order'],
+            stars=validated_data['stars'],
+            feedback=validated_data['feedback']
+        )
+        print(successOrder)
+        successOrder.save()
+        deleteOrder = validated_data['order']
+        deleteOrder.status = 'deleted'
+        deleteOrder.save()
+        return successOrder
+    
+class DetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Detail
+        fields = '__all__'
+
+    def create(self, validated_data):
+        detail = Detail.objects.create(
+            mark=validated_data['mark'],
+            type =validated_data['type'],
+            count=validated_data['count'],
+            isAvaliable=validated_data['isAvaliable'],
+            price=validated_data['price'],
+        )
+        detail.save()
+        return detail

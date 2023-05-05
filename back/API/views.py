@@ -60,6 +60,14 @@ class OrderAPIView(OrdersParentView):
         order = get_object_or_404(Orders, user__username__icontains=username)
         serializer = self.get_serializer(order)
         return Response(serializer.data)
+    
+    def put(self, request, id=None):
+        orders = Orders.objects.filter(id=id).first()
+        serializer = OrderSerializer(orders, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return None
 
 
 class ServicesAPIView(APIView):
@@ -71,9 +79,29 @@ class ServicesAPIView(APIView):
         service = Services.objects.all()
         serializer = ServicesSerializer(service, many=True)
         return Response(serializer.data)
-    
+
+class SuccessOrderAPIView(OrdersParentView):
+    queryset = SuccessedOrders.objects.all()
+    serializer_class = SuccessOrderSerializer
+    filter_backend = [SearchFilter]
+    search_fields = ['user__username']
+    lookup_field = 'user'
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]
     def post(self, request):
-        serializer = ServicesSerializer(data=request.data)
+        serializer = SuccessOrderSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        return Response(serializer.data)
+    def get(self, request):
+        sOrder = SuccessedOrders.objects.all()
+        serializer = SuccessOrderSerializer(sOrder, many=True)
+        return Response(serializer.data)
+    
+class DetailAPIView(APIView):
+    queryset = Detail.objects.all()
+    serializer_class = DetailSerializer
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]
+    def get(self, request):
+        detail = Detail.objects.all()
+        serializer = DetailSerializer(detail, many=True)
         return Response(serializer.data)
