@@ -62,7 +62,7 @@ class OrderAPIView(OrdersParentView):
         return Response(serializer.data)
     
     def put(self, request, id=None):
-        orders = Orders.objects.filter(id=id).first()
+        orders = Orders.objects.filter(user__username=request.data['user']).first()
         serializer = OrderSerializer(orders, data=request.data)
         if serializer.is_valid():
             serializer.save()

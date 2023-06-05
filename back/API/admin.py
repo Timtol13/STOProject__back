@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import Orders, Services, SuccessedOrders
+from .models import Orders, Services, SuccessedOrders, Detail
 
-admin.site.register([Orders, Services, SuccessedOrders])
+admin.site.register([Orders, Services, SuccessedOrders, Detail])

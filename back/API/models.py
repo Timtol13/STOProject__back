@@ -22,7 +22,7 @@ class Detail(Model):
     price = IntegerField("Price", blank=True)
 
     def __str__(self):
-        return '{self.mark} {self.type}'
+        return '{} {}'.format(self.mark, self.type)
 
 class Services(Model):
     title = CharField('Title', max_length=255, blank=True)
